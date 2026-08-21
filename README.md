@@ -14,29 +14,32 @@ science, so that is what this wraps.
 
 Keep VESTA as a human viewer. It is genuinely good at that.
 
-## Install / registration
+## Setup
 
-Registered at **user** scope, so it loads in every Claude Code session:
+Needs Python ≥3.10 (current pymatgen requires it) and its own venv:
 
 ```bash
-claude mcp add -s user crystallography -- /Users/laurelate/.venvs/crystal/bin/python /Users/laurelate/mcp-servers/crystallography/server.py
+python3 -m venv ~/.venvs/crystal
+~/.venvs/crystal/bin/python -m pip install -r requirements.txt
 ```
 
-Runs on its own venv (`~/.venvs/crystal`, Python 3.13) because current pymatgen
-requires Python ≥3.10 and the system Python is 3.9.6. That venv is deliberately
-separate from anything the R&D repo uses.
+Register with Claude Code at user scope, so it loads in every session:
 
-Check it:
+```bash
+claude mcp add -s user crystallography -- \
+  "$HOME/.venvs/crystal/bin/python" \
+  "$HOME/Documents/crystallography-mcp/server.py"
+```
+
+Check and remove:
 
 ```bash
 claude mcp list
-```
-
-Remove it:
-
-```bash
 claude mcp remove -s user crystallography
 ```
+
+It works with any MCP client, not just Claude Code — it is a plain stdio server,
+so point your client at `<venv python> server.py`.
 
 ## Tools
 
@@ -99,3 +102,18 @@ should be 280. Peak positions were unaffected, structure factors were slightly
 off. Guarded now by acceptance test T10 and `modeling/tests/crosscheck_pymatgen.py`.
 
 That is the argument for having a second implementation available.
+
+## Citing
+
+If a result from this ends up in a publication, cite pymatgen — it does the
+real work:
+
+> S.P. Ong et al., *Comput. Mater. Sci.* **68**, 314–319 (2013).
+
+And if you rendered anything in VESTA alongside it, VESTA asks to be cited too:
+
+> K. Momma and F. Izumi, *J. Appl. Crystallogr.* **44**, 1272–1276 (2011).
+
+## License
+
+MIT — see `LICENSE`.
